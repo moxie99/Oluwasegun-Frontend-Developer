@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
+import SearchBar from "../components/SearchBar";
 
 const slidesCapsules = [
   {
@@ -25,6 +26,7 @@ const Capsule = () => {
     <div>
       <Navbar />
       <Banner slides={slidesCapsules} />
+      <SearchBar />
     </div>
   );
 };

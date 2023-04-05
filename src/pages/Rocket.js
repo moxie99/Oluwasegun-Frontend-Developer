@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
+import SearchBar from "../components/SearchBar";
 
 const slidesRocket = [
   {
@@ -27,6 +28,7 @@ const Rocket = () => {
     <div>
       <Navbar />
       <Banner slides={slidesRocket} />
+      <SearchBar />
     </div>
   );
 };
