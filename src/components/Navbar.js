@@ -25,7 +25,11 @@ const Navbar = () => {
       <ul className="items-center justify-center flex-1 hidden space-x-8 md:flex cursor-pointer">
         {navItems.map(({ text, id }) => (
           <li
-            className={active === text ? "text-blue-700" : "text-blue-300"}
+            className={
+              active === text
+                ? "text-blue-700 headerLink"
+                : "text-blue-300 headerLink"
+            }
             onClick={() => {
               navigate(`/${text}`);
               setActive(text);
