@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
+import { useDispatch, useSelector } from "react-redux";
+import { setApiKey } from "../redux/slices/authslice";
+import { useGetCapsulesQuery } from "../redux/slices/api";
 
 const slidesCapsules = [
   {
@@ -22,11 +25,48 @@ const slidesCapsules = [
   },
 ];
 const Capsule = () => {
+  // const dispatch = useDispatch();
+  // const apiKey = useSelector((state) => state.auth.apiKey);
+
+  // useEffect(() => {
+  //   dispatch(setApiKey("my_api_key"));
+  // }, [dispatch]);
+
+  const { data, isLoading, error } = useGetCapsulesQuery();
+
   return (
     <div>
       <Navbar />
       <Banner slides={slidesCapsules} />
       <SearchBar />
+
+      {/*data Grid */}
+
+      <div className="py-20 space-y-10">
+        <h1 className="text-center text-4xl font-medium tracking-wide text-[#18615B] md:text-5xl">
+          Capsules
+        </h1>
+        {data || !isLoading ? (
+          <section className="flex justify-center z-40 mx-5">
+            <div className="tabPanel">
+              {data?.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-slate-950 rounded-md px-5 py-10"
+                >
+                  <h1 className="text-white">{item.type}</h1>
+                  <h2 className="text-white">{item.last_update}</h2>
+                  <h2 className="text-white">{item.status}</h2>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : (
+          <div className="flex items-center justify-center mx-5 my-2">
+            <h5>Loadiing...</h5>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
