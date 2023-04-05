@@ -1,7 +1,6 @@
 import React from "react";
 
 const SearchBar = ({ inputValue, setInputValue }) => {
-  console.log(inputValue);
   return (
     <div className="relative flex  flex-col justify-center overflow-hidden bg-gradient-to-br from-blue-300 to-b;ue-500 p-6 sm:py-12 mt-10">
       <div className="relative rounded-2xl bg-white px-6 pt-10 pb-8 shadow-xl ring-1 ring-gray-900/5 sm:mx-auto sm:max-w-lg sm:px-10">

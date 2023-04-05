@@ -29,17 +29,12 @@ const slidesRocket = [
 const Rocket = () => {
   const [inputValue, setInputValue] = useState("");
   const [selectedRocket, setSelectedRocket] = useState(null);
-
   // for modal
   const [isOpen, setIsOpen] = useState(false);
 
   function closeModal() {
     setIsOpen(false);
   }
-
-  // function openModal() {
-  //   setIsOpen(true);
-  // }
 
   const openModal = (rocket) => {
     setSelectedRocket(rocket);
@@ -62,22 +57,26 @@ const Rocket = () => {
         {data || !isLoading ? (
           <section className="flex justify-center z-40 mx-5">
             <div className="tabPanel">
-              {data?.map((item) => (
-                <div
-                  key={item.id}
-                  onClick={() => openModal(item)}
-                  className="bg-slate-950 rounded-md px-5 py-10"
-                >
-                  <h1 className="text-white">{item.company}</h1>
-                  <h2 className="text-white">{item.cost_per_launch}</h2>
-                  <h2 className="text-white">{item.country}</h2>
-                  <img
-                    src={item.flickr_images[0]}
-                    alt="avatar"
-                    className="w-full h-30 object-contain rounded-md"
-                  />
-                </div>
-              ))}
+              {data
+                .filter((item) =>
+                  item.company.toLowerCase().includes(inputValue.toLowerCase())
+                )
+                .map((item) => (
+                  <div
+                    key={item.id}
+                    onClick={() => openModal(item)}
+                    className="bg-slate-950 rounded-md px-5 py-10"
+                  >
+                    <h1 className="text-white">{item.company}</h1>
+                    <h2 className="text-white">{item.cost_per_launch}</h2>
+                    <h2 className="text-white">{item.country}</h2>
+                    <img
+                      src={item.flickr_images[0]}
+                      alt="avatar"
+                      className="w-full h-30 object-contain rounded-md"
+                    />
+                  </div>
+                ))}
             </div>
           </section>
         ) : (

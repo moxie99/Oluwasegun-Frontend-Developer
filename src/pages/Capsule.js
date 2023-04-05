@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
 import { useDispatch, useSelector } from "react-redux";
 import { setApiKey } from "../redux/slices/authslice";
 import { useGetCapsulesQuery } from "../redux/slices/api";
+import { Dialog, Transition } from "@headlessui/react";
 
 const slidesCapsules = [
   {
@@ -25,12 +26,18 @@ const slidesCapsules = [
   },
 ];
 const Capsule = () => {
-  // const dispatch = useDispatch();
-  // const apiKey = useSelector((state) => state.auth.apiKey);
+  const [inputValue, setInputValue] = useState("");
+  const [selectedRocket, setSelectedRocket] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
-  // useEffect(() => {
-  //   dispatch(setApiKey("my_api_key"));
-  // }, [dispatch]);
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const openModal = (rocket) => {
+    setSelectedRocket(rocket);
+    setIsOpen(true);
+  };
 
   const { data, isLoading, error } = useGetCapsulesQuery();
 
@@ -38,7 +45,7 @@ const Capsule = () => {
     <div>
       <Navbar />
       <Banner slides={slidesCapsules} />
-      <SearchBar />
+      <SearchBar inputValue={inputValue} setInputValue={setInputValue} />
 
       {/*data Grid */}
 
@@ -49,16 +56,21 @@ const Capsule = () => {
         {data || !isLoading ? (
           <section className="flex justify-center z-40 mx-5">
             <div className="tabPanel">
-              {data?.map((item) => (
-                <div
-                  key={item.id}
-                  className="bg-slate-950 rounded-md px-5 py-10"
-                >
-                  <h1 className="text-white">{item.type}</h1>
-                  <h2 className="text-white">{item.last_update}</h2>
-                  <h2 className="text-white">{item.status}</h2>
-                </div>
-              ))}
+              {data
+                .filter((item) =>
+                  item.type.toLowerCase().includes(inputValue.toLowerCase())
+                )
+                .map((item) => (
+                  <div
+                    onClick={() => openModal(item)}
+                    key={item.id}
+                    className="bg-slate-950 rounded-md px-5 py-10"
+                  >
+                    <h1 className="text-white">{item.type}</h1>
+                    <h2 className="text-white">{item.last_update}</h2>
+                    <h2 className="text-white">{item.status}</h2>
+                  </div>
+                ))}
             </div>
           </section>
         ) : (
@@ -67,6 +79,78 @@ const Capsule = () => {
           </div>
         )}
       </div>
+
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={closeModal}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95"
+                enterTo="opacity-100 scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100"
+                leaveTo="opacity-0 scale-95"
+              >
+                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title
+                    as="h3"
+                    className="text-lg font-medium leading-6 text-gray-900"
+                  >
+                    Type: {selectedRocket && selectedRocket.type}
+                  </Dialog.Title>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-500">
+                      Reuse_count:{" "}
+                      {selectedRocket && selectedRocket.reuse_count}
+                    </p>
+                    <p>
+                      Water_landings:{" "}
+                      {selectedRocket && selectedRocket.water_landings}
+                    </p>
+                    <p>
+                      Land Landing:{" "}
+                      {selectedRocket && selectedRocket.land_landings}
+                    </p>
+                    <p>
+                      Last Update:{" "}
+                      {selectedRocket && selectedRocket.last_update}
+                    </p>
+                    <p>
+                      Launches: {selectedRocket && selectedRocket.launches[0]}
+                    </p>
+                    <p>Serial: {selectedRocket && selectedRocket.serial}</p>
+                    <p>Status: {selectedRocket && selectedRocket.status}</p>
+                  </div>
+
+                  <div className="mt-4">
+                    <button
+                      type="button"
+                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={closeModal}
+                    >
+                      Got it, thanks!
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
     </div>
   );
 };
