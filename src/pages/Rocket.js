@@ -5,6 +5,7 @@ import SearchBar from "../components/SearchBar";
 import { useGetRocketsQuery } from "../redux/slices/api";
 
 import { Dialog, Transition } from "@headlessui/react";
+import Pagination from "../components/pagination";
 
 const slidesRocket = [
   {
@@ -26,9 +27,14 @@ const slidesRocket = [
   },
 ];
 
+// change page function
+
 const Rocket = () => {
   const [inputValue, setInputValue] = useState("");
   const [selectedRocket, setSelectedRocket] = useState(null);
+  const [currentPage, setCurrentPage] = React.useState(1);
+
+  const [postsPerView] = React.useState(10);
   // for modal
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,6 +47,14 @@ const Rocket = () => {
     setIsOpen(true);
   };
   const { data, isLoading, error } = useGetRocketsQuery();
+
+  const lastPostIndex = currentPage * postsPerView;
+  const firstPostIndex = lastPostIndex - postsPerView;
+  const currentPosts = data?.slice(firstPostIndex, lastPostIndex);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -57,7 +71,7 @@ const Rocket = () => {
         {data || !isLoading ? (
           <section className="flex justify-center z-40 mx-5">
             <div className="tabPanel">
-              {data
+              {currentPosts
                 .filter((item) =>
                   item.company.toLowerCase().includes(inputValue.toLowerCase())
                 )
@@ -170,6 +184,12 @@ const Rocket = () => {
           </div>
         </Dialog>
       </Transition>
+
+      <Pagination
+        postsPerView={postsPerView}
+        totalPosts={data?.length}
+        paginate={paginate}
+      />
     </div>
   );
 };

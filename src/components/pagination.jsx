@@ -11,13 +11,14 @@ const Pagination = ({ postsPerView, totalPosts, paginate }) => {
         {pageNumbers.map((number, index) => (
           <li
             key={index}
-            className="px-2 mx-2 bg-[#0a142f] rounded-full text-[#ff5170] md:mx-7"
+            className="px-2 mx-2 bg-[#bac4c6] rounded-full text-[#233d6f] md:mx-7"
           >
             <a
-              onClick={() => {
+              onClick={(event) => {
+                event.preventDefault();
                 paginate(number);
               }}
-              href="!#"
+              href="#"
             >
               {number}
             </a>

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setApiKey } from "../redux/slices/authslice";
 import { useGetCapsulesQuery } from "../redux/slices/api";
 import { Dialog, Transition } from "@headlessui/react";
+import Pagination from "../components/pagination";
 
 const slidesCapsules = [
   {
@@ -29,6 +30,8 @@ const Capsule = () => {
   const [inputValue, setInputValue] = useState("");
   const [selectedRocket, setSelectedRocket] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [postsPerView] = React.useState(10);
 
   function closeModal() {
     setIsOpen(false);
@@ -40,6 +43,14 @@ const Capsule = () => {
   };
 
   const { data, isLoading, error } = useGetCapsulesQuery();
+
+  const lastPostIndex = currentPage * postsPerView;
+  const firstPostIndex = lastPostIndex - postsPerView;
+  const currentPosts = data?.slice(firstPostIndex, lastPostIndex);
+
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div>
@@ -56,7 +67,7 @@ const Capsule = () => {
         {data || !isLoading ? (
           <section className="flex justify-center z-40 mx-5">
             <div className="tabPanel">
-              {data
+              {currentPosts
                 .filter((item) =>
                   item.type.toLowerCase().includes(inputValue.toLowerCase())
                 )
@@ -151,6 +162,12 @@ const Capsule = () => {
           </div>
         </Dialog>
       </Transition>
+
+      <Pagination
+        postsPerView={postsPerView}
+        totalPosts={data?.length}
+        paginate={paginate}
+      />
     </div>
   );
 };
