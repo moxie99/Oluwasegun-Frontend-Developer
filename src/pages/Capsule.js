@@ -2,8 +2,8 @@ import React, { Fragment, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
-import { useDispatch, useSelector } from "react-redux";
-import { setApiKey } from "../redux/slices/authslice";
+// import { useDispatch, useSelector } from "react-redux";
+// import { setApiKey } from "../redux/slices/authslice";
 import { useGetCapsulesQuery } from "../redux/slices/api";
 import { Dialog, Transition } from "@headlessui/react";
 import Pagination from "../components/pagination";
@@ -52,6 +52,12 @@ const Capsule = () => {
     setCurrentPage(pageNumber);
   };
 
+  // const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   // Set the API key here
+  //   dispatch(setApiKey("I place the api key here for authentication"));
+  // }, [dispatch]);
   return (
     <div>
       <Navbar />
@@ -68,7 +74,7 @@ const Capsule = () => {
           <section className="flex justify-center z-40 mx-5">
             <div className="tabPanel">
               {currentPosts
-                .filter((item) =>
+                ?.filter((item) =>
                   item.type.toLowerCase().includes(inputValue.toLowerCase())
                 )
                 .map((item) => (

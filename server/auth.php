@@ -1,6 +1,6 @@
 <?php
 // Set your API key here
-$api_key = 'your_api_key';
+$api_key = 'I give the value of api key here';
 
 // Set the API endpoint URL
 $endpoint_url = 'https://api.spacexdata.com/v4/capsules';

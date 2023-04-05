@@ -1,9 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Banner from "../components/Banner";
 import SearchBar from "../components/SearchBar";
 import { useGetRocketsQuery } from "../redux/slices/api";
-
+// import { setApiKey } from "../redux/slices/authslice";
+// import { useSelector, useDispatch } from "react-redux";
 import { Dialog, Transition } from "@headlessui/react";
 import Pagination from "../components/pagination";
 
@@ -55,6 +56,15 @@ const Rocket = () => {
     setCurrentPage(pageNumber);
   };
 
+  // const dispatch = useDispatch();
+
+  // const apiKey = useSelector((state) => state.auth.apiKey);
+
+  // useEffect(() => {
+  //   // Set the API key here
+  //   dispatch(setApiKey("I place the api key here for authentication"));
+  // }, [dispatch]);
+
   return (
     <div>
       <Navbar />
@@ -71,7 +81,7 @@ const Rocket = () => {
           <section className="flex justify-center z-40 mx-5">
             <div className="tabPanel">
               {currentPosts
-                .filter((item) =>
+                ?.filter((item) =>
                   item.company.toLowerCase().includes(inputValue.toLowerCase())
                 )
                 .map((item) => (
